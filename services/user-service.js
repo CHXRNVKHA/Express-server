@@ -1,12 +1,13 @@
-const User = require('../models/user');
+const fs = require('fs');
 
-const add = async function (req) {
-    const user = new User(req.body)
-    await user.save()
-    const token = await user.generateAuthToken()
-    return {user, token}  
-}
+let users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
 
-const get = async function(){
-    return await User.find({})
+const getUserById = async function (id) {
+    const id = this.id;
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].id == id) {
+            return users[i];
+        }
+    }
+    throw new Error('user not found');
 }
