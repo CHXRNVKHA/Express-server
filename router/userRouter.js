@@ -5,6 +5,6 @@ const user_controller = new UserController();
 
 const router = new express.Router();
 
-router.get('/:id', user_controller.getUser);
+router.get('/:id', user_controller.getUserById);
 
 module.exports = router;
