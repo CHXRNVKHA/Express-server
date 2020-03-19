@@ -2,7 +2,7 @@ const fs = require('fs');
 
 let users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
 
-const getUserById = async function (id) {
+const getUserById = function (id) {
     const id = this.id;
     for (let i = 0; i < users.length; i++) {
         if (users[i].id == id) {
@@ -10,4 +10,8 @@ const getUserById = async function (id) {
         }
     }
     throw new Error('user not found');
+}
+
+module.exports = {
+    getUserById,
 }
