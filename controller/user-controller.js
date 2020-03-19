@@ -1,12 +1,12 @@
 const service = require('../services/user-service');
 class UserController {
-    constructor(){}
-    getUser = async (req, res) => {
+    constructor(){};
+    getUserById = async (req, res) => {
         try {
-            const result = await service.get()
-            res.send(result)
+            const result = await service.getUserById(req.params.id);
+            res.send(result);
         } catch (e) {
-            res.status(400).send({error:e.message})
+            res.status(400).send({error:e.message});
         }
     }
 }
