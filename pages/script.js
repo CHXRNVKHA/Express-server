@@ -49,21 +49,23 @@ const getUsers = async function () {
 
 const createUser = async function (event) {
     event.preventDefault();
-    const userName = this.elements['name'].value;
-    const userAge = this.elements['age'].value;
-    const response = await fetch('/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: JSON.stringify({
-            name: userName,
-            age: userAge,
-        })
-    });
-    const users = await response.json();
-    const lastUser = users[users.length - 1];
-    addTableRow(lastUser.id, lastUser.name, lastUser.age, tableBody);
+    if (event.target.id === 'add') {
+        const userName = this.elements['name'].value;
+        const userAge = this.elements['age'].value;
+        const response = await fetch('/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({
+                name: userName,
+                age: userAge,
+            })
+        });
+        const users = await response.json();
+        const lastUser = users[users.length - 1];
+        addTableRow(lastUser.id, lastUser.name, lastUser.age, tableBody);
+    }
 }
 
 const updateUser = async function (event) {
@@ -95,7 +97,7 @@ const deleteUser = async function (event) {
         const targetRow = event.target.parentElement.parentElement;
         const userId = targetRow.cells[0].innerText;
         targetRow.remove();
-        let response = await fetch('/users', {
+        const response = await fetch('/users', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -107,7 +109,21 @@ const deleteUser = async function (event) {
     }
 }
 
+const saveAllChanges = async function (event) {
+    event.preventDefault();
+    if (event.target.id === 'submit') {
+        const response = await fetch('/users/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+        });
+        alert(response.statusText);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', getUsers);
-form.addEventListener('submit', createUser);
+form.addEventListener('click', saveAllChanges);
+form.addEventListener('click', createUser)
 tableBody.addEventListener('click', updateUser);
 tableBody.addEventListener('click', deleteUser);

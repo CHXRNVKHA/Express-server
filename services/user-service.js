@@ -1,6 +1,12 @@
 const fs = require('fs');
-const users = require('../users'); 
+const users = require('../users');
 
+const defUsersStorageName = 'users.json';
+
+const saveChanges = function () {
+    fs.writeFileSync(defUsersStorageName, JSON.stringify(users));
+    return 'Your data has been saved';
+}
 const deleteUser = function (uId) {
     users.forEach(element => {
         if (element.id == uId) {
@@ -59,4 +65,5 @@ module.exports = {
     createUser,
     updateUser,
     deleteUser,
+    saveChanges,
 }
