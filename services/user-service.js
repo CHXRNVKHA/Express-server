@@ -1,6 +1,5 @@
 const fs = require('fs');
-
-let users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
+const users = require('../users'); 
 
 const getUsers = function () {
     if (users) return users;
