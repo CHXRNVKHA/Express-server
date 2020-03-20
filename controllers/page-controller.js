@@ -3,9 +3,7 @@ const fs = require('fs');
 const defaultPageName = 'index.html';
 const pageNotFoundMsg = 'Resource not found!';
 const defaultPagesFolder = 'pages';
-
-
-
+const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
 
 class PageController {
     constructor(){}
