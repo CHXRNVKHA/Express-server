@@ -1,6 +1,14 @@
 const fs = require('fs');
 const users = require('../users'); 
 
+const deleteUser = function (uId) {
+    users.forEach(element => {
+        if (element.id == uId) {
+            element.deleteAt = Date.now();
+        }
+    });
+    return users;
+}
 const updateUser = function (uId, uName, uAge) {
     users.forEach(element => {
         if (element.id == uId) {
@@ -20,10 +28,12 @@ const createUser = function (uName, uAge) {
     };
     if (users.length == 0) {
         user.id = 1;
+        user.deleteAt = null;
         users.push(user);
     }
     else {
         user.id = users[users.length - 1].id + 1;
+        user.deleteAt = null;
         users.push(user);
     }
     return users;
@@ -48,4 +58,5 @@ module.exports = {
     getUsers,
     createUser,
     updateUser,
+    deleteUser,
 }

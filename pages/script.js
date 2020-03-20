@@ -2,24 +2,33 @@ const tableBody = document.querySelector('#mainTable tbody');
 const form = document.querySelector("form");
 
 const defUpdateBtnText = 'Update';
+const defDelBtnText = 'Delete';
 
+const createButton = function (inText, className) {
+    const btn = document.createElement('button');
+    btn.innerText = inText;
+    btn.className = className;
+    return btn;
+}
 const addTableRow = function (id, name, age, tBody) {
     const row = document.createElement('tr');
     const idCol = document.createElement('th');
     const nameCol = document.createElement('th');
     const ageCol = document.createElement('th');
     const updateCol = document.createElement('th');
-    const updateBtn = document.createElement('button');
-    updateBtn.innerText = defUpdateBtnText;
-    updateBtn.className = 'updateBtn';
+    const deleteCol = document.createElement('th');
+    const updateBtn = createButton(defUpdateBtnText, 'updateBtn');
+    const deleteBtn = createButton(defDelBtnText, 'deleteBtn');
     updateCol.appendChild(updateBtn);
+    deleteCol.appendChild(deleteBtn);
     idCol.innerText = id;
     nameCol.innerText = name;
     ageCol.innerText = age;
     row.appendChild(idCol);
     row.appendChild(nameCol);
     row.appendChild(ageCol);
-    row.appendChild(updateBtn);
+    row.appendChild(updateCol);
+    row.appendChild(deleteCol);
     tBody.appendChild(row);
 }
 
@@ -32,7 +41,9 @@ const getUsers = async function () {
     });
     let users = await response.json();
     users.forEach(element => {
-       addTableRow(element.id, element.name, element.age, tableBody);
+        if (element.deleteAt === null) {
+            addTableRow(element.id, element.name, element.age, tableBody);
+        }
     });
 }
 
@@ -58,7 +69,7 @@ const createUser = async function (event) {
 const updateUser = async function (event) {
     event.preventDefault();
     if (event.target.className == 'updateBtn') {
-        const targetRow = event.target.parentElement;
+        const targetRow = event.target.parentElement.parentElement;
         const userName = form.elements['name'].value;
         const userAge = form.elements['age'].value;
         const userId = targetRow.cells[0].innerText;
@@ -78,6 +89,25 @@ const updateUser = async function (event) {
     }
 }
 
+const deleteUser = async function (event) {
+    event.preventDefault();
+    if (event.target.className == 'deleteBtn') {
+        const targetRow = event.target.parentElement.parentElement;
+        const userId = targetRow.cells[0].innerText;
+        targetRow.remove();
+        let response = await fetch('/users', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({
+                id: userId,
+            })
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', getUsers);
 form.addEventListener('submit', createUser);
 tableBody.addEventListener('click', updateUser);
+tableBody.addEventListener('click', deleteUser);
