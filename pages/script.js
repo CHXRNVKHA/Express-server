@@ -3,6 +3,7 @@ const form = document.querySelector("form");
 
 const defUpdateBtnText = 'Update';
 const defDelBtnText = 'Delete';
+let usersTempStorage;
 
 const createButton = function (inText, className) {
     const btn = document.createElement('button');
@@ -32,6 +33,16 @@ const addTableRow = function (id, name, age, tBody) {
     tBody.appendChild(row);
 }
 
+const resetTable = async function (event) {
+    if (event.target.id === 'reset') {
+        tableBody.innerHTML = '';
+        usersTempStorage.forEach(element => {
+            if (element.deleteAt === null) {
+                addTableRow(element.id, element.name, element.age, tableBody);
+            }
+        });
+    }
+}
 const getUsers = async function () {
     const response = await fetch('/users', {
         method: 'GET',
@@ -39,7 +50,8 @@ const getUsers = async function () {
             'Content-Type': 'application/json; charset=utf-8',
         }
     });
-    let users = await response.json();
+    const users = await response.json();
+    usersTempStorage = users;
     users.forEach(element => {
         if (element.deleteAt === null) {
             addTableRow(element.id, element.name, element.age, tableBody);
@@ -118,12 +130,14 @@ const saveAllChanges = async function (event) {
                 'Content-Type': 'application/json; charset=utf-8'
             },
         });
-        alert(response.statusText);
+        usersTempStorage = await response.json();
+        alert('Data has been saved');
     }
 }
 
 document.addEventListener('DOMContentLoaded', getUsers);
 form.addEventListener('click', saveAllChanges);
-form.addEventListener('click', createUser)
+form.addEventListener('click', createUser);
+form.addEventListener('click', resetTable);
 tableBody.addEventListener('click', updateUser);
 tableBody.addEventListener('click', deleteUser);

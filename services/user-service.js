@@ -5,7 +5,7 @@ const defUsersStorageName = 'users.json';
 
 const saveChanges = function () {
     fs.writeFileSync(defUsersStorageName, JSON.stringify(users));
-    return 'Your data has been saved';
+    return users;
 }
 const deleteUser = function (uId) {
     users.forEach(element => {
