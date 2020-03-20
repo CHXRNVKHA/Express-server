@@ -2,21 +2,18 @@ const fs = require('fs');
 const users = require('../users'); 
 
 const updateUser = function (uId, uName, uAge) {
-    const user = {
-        id: uId,
-        name: uName,
-        age: uAge,
-    };
-    if (users.includes(user)) {
-        users[uId].name = uName;
-        users[uId].age = uAge;
-    }
-    else {
-        throw new Error('There is no such user');
-    }
+    users.forEach(element => {
+        if (element.id == uId) {
+            element.name = uName;
+            element.age = uAge;
+        }
+    });
     return users;
 }
 const createUser = function (uName, uAge) {
+    users.forEach(element => {
+        if (element.name === uName) throw new Error('This user name already exist, choose another');
+    });
     const user = {
         name: uName,
         age: uAge,

@@ -58,9 +58,12 @@ const createUser = async function (event) {
 const updateUser = async function (event) {
     event.preventDefault();
     if (event.target.className == 'updateBtn') {
+        const targetRow = event.target.parentElement;
         const userName = form.elements['name'].value;
         const userAge = form.elements['age'].value;
-        const userId = event.target.parentElement.cells[0].innerText;
+        const userId = targetRow.cells[0].innerText;
+        targetRow.cells[1].innerText = userName;
+        targetRow.cells[2].innerText = userAge;
         const response = await fetch('/users', {
             method: 'PUT',
             headers: {
